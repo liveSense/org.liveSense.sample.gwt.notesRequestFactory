@@ -2,17 +2,20 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.liveSense</groupId>
+		<groupId>com.github.livesense</groupId>
 		<artifactId>org.liveSense.parent</artifactId>
-		<version>1-SNAPSHOT</version>
+		<version>2-SNAPSHOT</version>
+		<relativePath>../org.liveSense.parent</relativePath>
 	</parent>
 
 	<!-- TODO -->
 
 	<artifactId>org.liveSense.sample.gwt.notesRequestFactory</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>org.liveSense.sample.gwt.notesRequestFactory</name>
+    
+	<name>liveSense :: Sample :: GWT RPC Notes Request Factory</name>
 	<description>liveSense gwt sample using RequestFactory.</description>
+
 	<packaging>bundle</packaging>
 
 	<properties>
@@ -55,10 +58,6 @@
 
 		<resources>
 			<resource>
-				<directory>src/main/java</directory>
-				<filtering>false</filtering>
-			</resource>
-			<resource>
 				<targetPath>${basedir}/war</targetPath>
 				<directory>src/main/gwthosted-webapp</directory>
 				<filtering>false</filtering>
@@ -77,46 +76,6 @@
 				<filtering>false</filtering>
 			</resource>
 		</resources>
-
-		<pluginManagement>
-			<plugins>
-
-
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											build-helper-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.7,)
-										</versionRange>
-										<goals>
-											<goal>add-source</goal>
-											<goal>add-resource</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-
 
 		<plugins>
 			<!-- Cleaning -->
@@ -139,112 +98,15 @@
 				<artifactId>maven-scr-plugin</artifactId>
 			</plugin>
 
-			<!-- requestfactory-apt runs an annotation processor (APT) to instrument its service interfaces so that RequestFactoryServer can decode client requests. Normally you would just have a dependency on requestfactory-apt with <scope>provided</scope>, but that won't work in eclipse due to m2e bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=335036 -->
-			<plugin>
-				<groupId>org.bsc.maven</groupId>
-				<artifactId>maven-processor-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>process</id>
-						<goals>
-							<goal>process</goal>
-						</goals>
-						<phase>generate-sources</phase>
-					</execution>
-				</executions>
-				<!-- <configuration> <processors> <processor> hu.libra.libraweb.core.client.gwt.annotationprocessors.LibraPanelAnnotationMenuProcessor</processor> </processors> </configuration> -->
-				<dependencies>
-					<!-- Classpath trick because our Deobfuscator override needs it -->
-					<dependency>
-						<groupId>com.google.web.bindery</groupId>
-						<artifactId>requestfactory-apt</artifactId>
-						<version>${gwt.version}</version>
-					</dependency>
-					<!-- <dependency> <groupId>hu.libra</groupId> <artifactId>hu.libra.libraweb.core.client.gwt</artifactId> <version>1.0.0-SNAPSHOT</version> </dependency> -->
-				</dependencies>
-			</plugin>
-			<!-- Google Plugin for Eclipse (GPE) won't see the source generated above by requestfactory-apt unless it is exposed as an additional source dir -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>add-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>${project.build.directory}/generated-sources/apt</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>compile-apt</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<generatedSourcesDirectory>${project.build.directory}/generated-sources/apt</generatedSourcesDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- The Eclipse won't see the source generated above by axis tools unless it is exposed as an additional source dir -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>add-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>${project.build.directory}/generated-sources/apt</source>
-							</sources>
-						</configuration>
-					</execution>
-
-					<execution>
-						<id>add-resource</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-resource</goal>
-						</goals>
-						<configuration>
-							<resources>
-								<resource>
-									<directory>${project.build.directory}/generated-sources/apt</directory>
-									<includes>
-										<include>**/*</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-
-				</executions>
-			</plugin>
-
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<!-- Export request factory packages -->
-						<Export-Package>
-							org.liveSense.sample.gwt.notesRequestFactory.*
-						</Export-Package>
-
+                        <Export-Package>
+                            org.liveSense.sample.gwt.notesRequestFactory.*;version=${project.version}
+                        </Export-Package>
 						<!-- Copy the files from filesystem to Bundle -->
 						<Include-Resource>
 							SLING-INF/jcr-contents=src/main/resources/jcr-contents,
@@ -276,10 +138,6 @@
 						<!-- node types to be created -->
 						<Sling-Nodetypes>
 						</Sling-Nodetypes>
-
-						<Import-Package>
-							*;resolution:=optional
-						</Import-Package>
 
 					</instructions>
 				</configuration>
@@ -322,64 +180,75 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
-			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
-			<version>${gwt.version}</version>
-			<!-- scope>runtime</scope -->
-		</dependency>
-
+        <dependency>
+            <groupId>com.google.web.bindery</groupId>
+            <artifactId>requestfactory-apt</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.web.bindery</groupId>
+            <artifactId>requestfactory-server</artifactId>
+            <version>${gwt.version}</version>
+        </dependency>
 
 		<!-- liveSense dependencies -->
 		<dependency>
-			<groupId>org.liveSense</groupId>
+			<groupId>com.github.livesense</groupId>
 			<artifactId>org.liveSense.misc.queryBuilder</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.liveSense</groupId>
+			<groupId>com.github.livesense</groupId>
 			<artifactId>org.liveSense.misc.i18n</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.liveSense</groupId>
+			<groupId>com.github.livesense</groupId>
 			<artifactId>org.liveSense.scripting.jsp.taglib.jstl</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.liveSense</groupId>
+			<groupId>com.github.livesense</groupId>
 			<artifactId>org.liveSense.scripting.jsp.taglib.json</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.liveSense</groupId>
+			<groupId>com.github.livesense</groupId>
 			<artifactId>org.liveSense.service.securityManager</artifactId>
+			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>org.liveSense</groupId>
-			<artifactId>org.liveSense.framework.gwt</artifactId>
+			<groupId>com.github.livesense</groupId>
+			<artifactId>org.liveSense.service.gwt</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Sling dependencies -->
 		<dependency>
 			<groupId>org.apache.sling</groupId>
 			<artifactId>org.apache.sling.scripting.jsp.taglib</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.sling</groupId>
 			<artifactId>org.apache.sling.api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.sling</groupId>
 			<artifactId>org.apache.sling.auth.core</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.sling</groupId>
 			<artifactId>org.apache.sling.jcr.api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Felix, JaCkRabbit dependencies -->
@@ -402,9 +271,6 @@
 			<version>6.1.19</version>
 			<scope>runtime</scope>
 		</dependency>
-
-
-
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.scr.annotations</artifactId>
@@ -412,16 +278,17 @@
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.core</artifactId>
-			<version>4.2.0</version><!--$NO-MVN-MAN-VER$ -->
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.compendium</artifactId>
-			<version>4.2.0</version><!--$NO-MVN-MAN-VER$ -->
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
