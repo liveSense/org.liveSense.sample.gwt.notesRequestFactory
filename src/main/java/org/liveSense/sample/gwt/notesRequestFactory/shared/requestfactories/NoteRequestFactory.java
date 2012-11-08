@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.liveSense.sample.gwt.notesRequestFactory.shared.proxies.NoteValueProxy;
 import org.liveSense.sample.gwt.notesRequestFactory.shared.service.NoteDao;
-import org.liveSense.servlet.requestfactory.OsgiServiceLocator;
+import org.liveSense.service.gwt.OsgiServiceLocator;
 
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;

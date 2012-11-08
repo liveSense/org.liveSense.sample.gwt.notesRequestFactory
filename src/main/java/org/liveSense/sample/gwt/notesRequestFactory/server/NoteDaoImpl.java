@@ -16,7 +16,7 @@ import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.jcr.api.SlingRepository;
 import org.liveSense.sample.gwt.notesRequestFactory.shared.domain.NoteBean;
 import org.liveSense.sample.gwt.notesRequestFactory.shared.service.NoteDao;
-import org.liveSense.servlet.requestfactory.OsgiServiceLocator;
+import org.liveSense.service.gwt.OsgiServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
