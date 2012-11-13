@@ -19,7 +19,7 @@
 	<packaging>bundle</packaging>
 
 	<properties>
-		<gwt.project>Notes</gwt.project>
+		<gwt.project>notesRequestFactory</gwt.project>
 	</properties>
 
 	<profiles>
@@ -127,12 +127,12 @@
 						</Felix-Initial-Configuration>
 						<!-- initial content to be loaded on bundle installation -->
 						<Sling-Initial-Content>
-							SLING-INF/jcr-nodes;overwrite:=false;uninstall:=true;overwriteProperties=true,
-							SLING-INF/jcr-contents;overwrite:=true;uninstall:=true;overwriteProperties=true,
-							SLING-INF/gwt-app;path:=/gwt;overwrite:=true;uninstall:=true
+                            SLING-INF/jcr-nodes;overwrite:=false;uninstall:=true;overwriteProperties=true,
+							SLING-INF/jcr-contents;overwrite:=false;uninstall:=true;overwriteProperties=true
 						</Sling-Initial-Content>
 						<!-- Delegate Bundle content as resource -->
 						<Sling-Bundle-Resources>
+							/gwt;path:=/SLING-INF/gwt-app,
 							/apps;path:=/SLING-INF/sling-scripts
 						</Sling-Bundle-Resources>
 						<!-- node types to be created -->
