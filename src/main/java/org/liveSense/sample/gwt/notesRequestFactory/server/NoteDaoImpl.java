@@ -10,15 +10,15 @@ import javax.jcr.Session;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.jcr.api.SlingRepository;
 import org.liveSense.sample.gwt.notesRequestFactory.shared.domain.NoteBean;
 import org.liveSense.sample.gwt.notesRequestFactory.shared.service.NoteDao;
-import org.liveSense.service.gwt.OsgiServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.web.bindery.requestfactory.shared.ServiceLocator;
 
 
 @Component(immediate=true, metatype=false)
@@ -27,15 +27,15 @@ public class NoteDaoImpl implements NoteDao {
 
 	Logger log = LoggerFactory.getLogger(NoteDaoImpl.class);
 
-	private String pn_notetitle = "noteTitle";
-	private String pn_notetext = "noteText";
-	private String path_democontent = "/samples/notesrequestfactory/notes";
-
-	//private Session session = null;
-	private Node root = null;
+	private final String pn_notetitle = "noteTitle";
+	private final String pn_notetext = "noteText";
+	private final String path_democontent = "/samples/notesrequestfactory/notes";
 
 	@Reference
 	private SlingRepository repository;
+
+	@Reference
+	private ServiceLocator serviceLocator;
 
 	private Session getAdministrativeSession() throws RepositoryException {
 		Session session = repository.loginAdministrative(repository.getDefaultWorkspace());
@@ -46,7 +46,6 @@ public class NoteDaoImpl implements NoteDao {
 	@Activate
 	protected void activate() {
 		Session session = null;
-		OsgiServiceLocator.addToCache(NoteDao.class, this);
 		try {
 			session = getAdministrativeSession();
 		} catch (RepositoryException e) {
@@ -55,114 +54,122 @@ public class NoteDaoImpl implements NoteDao {
 
 		if (session != null) {
 			try {
-				root = (Node) session.getItem(path_democontent);
+				Node root = (Node) session.getItem(path_democontent);
 			} catch (RepositoryException e) {
 				log.error("NoteDaoImpl create: error while getting demo content path " + path_democontent + ": "
 						+ session.getWorkspace().getName() + ": ", e);
+			} finally {
+				try {
+					if (session != null && session.isLive())
+						session.logout();
+				} catch (Throwable th) {
+					log.warn("Could not close session");
+				}
 			}
 		} else {
 			log.error("No session");
 		}
 	}
 
-	@Deactivate
-	protected void deactivate() {
-		OsgiServiceLocator.removeFromCache(NoteDao.class);	
-	}
-
+	@Override
 	public void createNote(NoteBean note) {
 		Session session = null;
 		log.info("createNote: creating note with title {}...", note.getTitle());
-		if (root != null) {
+		try {
+			session = getAdministrativeSession();
+			Node root = (Node) session.getItem(path_democontent);
+
+			// add a node to the root of the demo content and set the properties via the POJO's getters
+			final Node node = root.addNode("note");
+			node.setProperty(pn_notetitle, note.getTitle());
+			node.setProperty(pn_notetext, note.getText());
+			session.save();
+			log.info("createNote: successfully saved note {} to repository.", node.getPath());
+
+		} catch (RepositoryException e) {
+
+			log.error("createNote: error while creating note in repository: ", e);
 			try {
-				session = getAdministrativeSession();
-
-				// add a node to the root of the demo content and set the properties via the POJO's getters
-				final Node node = root.addNode("note");
-				node.setProperty(pn_notetitle, note.getTitle());
-				node.setProperty(pn_notetext, note.getText());
-				session.save();
-				log.info("createNote: successfully saved note {} to repository.", node.getPath());
-
-			} catch (RepositoryException e) {
-
-				log.error("createNote: error while creating note in repository: ", e);
-				try {
-					// if the node creation failed, try to roll-back the repository changes accumulated
-					if (session.hasPendingChanges()) {
-						session.refresh(false);
-					}
-				} catch (RepositoryException e1) {
-					log.error("createNote: error while reverting changes after trying to save note to repository: ", e1);
+				// if the node creation failed, try to roll-back the repository changes accumulated
+				if (session.hasPendingChanges()) {
+					session.refresh(false);
 				}
-			} finally {
-				if (session != null &&session.isLive())
-					session.logout();
+			} catch (RepositoryException e1) {
+				log.error("createNote: error while reverting changes after trying to save note to repository: ", e1);
 			}
-
-		} else {
-			log.error("createNote: cannot create note, demo content path {} unavailable!", path_democontent);
+		} finally {
+			try {
+				if (session != null && session.isLive())
+					session.logout();
+			} catch (Throwable th) {
+				log.warn("Could not close session");
+			}
 		}
 	}
 
+	@Override
 	public List<NoteBean> getNotes() throws Exception {
 		Session session = null;
 
 		final List<NoteBean> notes = new ArrayList<NoteBean>();
 
-		if (root != null) {
-			try {
-				session = getAdministrativeSession();
-				// get all child nodes of the demo content root node
-				final NodeIterator nodes = root.getNodes();
-				while (nodes.hasNext()) {
+		try {
+			session = getAdministrativeSession();
+			Node root = (Node) session.getItem(path_democontent);
 
-					Node node = nodes.nextNode();
-					// for every child node, that has the correct properties set, create a POJO and add it to the list
-					if (node.hasProperty(pn_notetitle) && node.hasProperty(pn_notetext)) {
+			// get all child nodes of the demo content root node
+			final NodeIterator nodes = root.getNodes();
+			while (nodes.hasNext()) {
 
-						final NoteBean note = new NoteBean();
-						note.setTitle(node.getProperty(pn_notetitle).getString());
-						note.setText(node.getProperty(pn_notetext).getString());
-						// set the node's path, so that the GWT client app can use it as the parameter for the
-						// deleteNote(String path) method.
-						note.setPath(node.getPath());
+				Node node = nodes.nextNode();
+				// for every child node, that has the correct properties set, create a POJO and add it to the list
+				if (node.hasProperty(pn_notetitle) && node.hasProperty(pn_notetext)) {
 
-						notes.add(note);
-						log.info("getNotes: found note {}, adding to list...", node.getPath());
-					}
+					final NoteBean note = new NoteBean();
+					note.setTitle(node.getProperty(pn_notetitle).getString());
+					note.setText(node.getProperty(pn_notetext).getString());
+					// set the node's path, so that the GWT client app can use it as the parameter for the
+					// deleteNote(String path) method.
+					note.setPath(node.getPath());
+
+					notes.add(note);
+					log.info("getNotes: found note {}, adding to list...", node.getPath());
 				}
-
-				if (session.hasPendingChanges())
-					session.save();
-
-			} catch (RepositoryException e) {
-				log.error("getNotes: error while getting list of notes from " + path_democontent + ": ", e);
-			} finally {
-				if (session != null && session.isLive())
-					session.logout();
 			}
 
-		} else {
-			throw new Exception("getNotes: error while getting notes, demo content path {} unavailable! " + path_democontent + ", root: " + root.getPath());
-			//            log.error("getNotes: error while getting notes, demo content path {} unavailable!", path_democontent);
+			if (session.hasPendingChanges())
+				session.save();
+
+		} catch (RepositoryException e) {
+			log.error("getNotes: error while getting list of notes from " + path_democontent + ": ", e);
+		} finally {
+			try {
+				if (session != null && session.isLive())
+					session.logout();
+			} catch (Throwable th) {
+				log.warn("Could not close session");
+			}
 		}
 
 		return notes;
 	}
 
+	@Override
 	public void deleteNote(String path) {
 		Session session = null;
 		try {
 			session = getAdministrativeSession();
-
 			session.getItem(path).remove();
 			session.save();
 		} catch (RepositoryException e) {
 			log.error("deleteNote: error while deleting note {}: ", e);
 		} finally {
-			if (session != null && session.isLive()) 
-				session.logout();
+			try {
+				if (session != null && session.isLive())
+					session.logout();
+			} catch (Throwable th) {
+				log.warn("Could not close session");
+			}
 		}
 	}
 
