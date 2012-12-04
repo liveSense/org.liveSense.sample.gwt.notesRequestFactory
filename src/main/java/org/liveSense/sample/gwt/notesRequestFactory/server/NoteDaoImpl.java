@@ -11,6 +11,8 @@ import javax.jcr.Session;
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.ReferenceCardinality;
+import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.jcr.api.SlingRepository;
 import org.liveSense.sample.gwt.notesRequestFactory.shared.domain.NoteBean;
@@ -31,10 +33,10 @@ public class NoteDaoImpl implements NoteDao {
 	private final String pn_notetext = "noteText";
 	private final String path_democontent = "/samples/notesrequestfactory/notes";
 
-	@Reference
+	@Reference(cardinality=ReferenceCardinality.MANDATORY_UNARY, policy=ReferencePolicy.DYNAMIC)
 	private SlingRepository repository;
 
-	@Reference
+	@Reference(cardinality=ReferenceCardinality.MANDATORY_UNARY, policy=ReferencePolicy.DYNAMIC)
 	private ServiceLocator serviceLocator;
 
 	private Session getAdministrativeSession() throws RepositoryException {
