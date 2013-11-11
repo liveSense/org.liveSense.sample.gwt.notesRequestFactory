@@ -11,23 +11,26 @@ liveSense gwt sample using RequestFactory.
 * org.liveSense.sample.gwt.notesRequestFactory.shared.service(1.0.0.SNAPSHOT)
 
 ## OSGi Dependencies
-* __Apache Felix Declarative Services - org.apache.felix.scr (1.6.0)__
-	* org.osgi.service.component
-* __[liveSense :: Service :: GWT Abstract Services - org.liveSense.service.gwt (2-SNAPSHOT)](http://github.com/liveSense/org.liveSense.service.gwt)__
-	* org.liveSense.service.gwt
+* __[liveSense :: Framework :: GWT framework - org.liveSense.framework.gwt (2-SNAPSHOT)](http://github.com/liveSense/org.liveSense.framework.gwt)__
+	* com.google.web.bindery.requestfactory.shared
+	* com.google.web.bindery.requestfactory.vm.impl
 * __Content Repository for JavaTM Technology API - javax.jcr (2.0)__
 	* javax.jcr
 * __Apache Sling Repository API Bundle - org.apache.sling.jcr.api (2.1.0)__
 	* org.apache.sling.jcr.api
-* __slf4j-api - slf4j.api (1.6.1)__
+* __[liveSense :: Service :: GWT Abstract Services - org.liveSense.service.gwt (2-SNAPSHOT)](http://github.com/liveSense/org.liveSense.service.gwt)__
+	* org.liveSense.service.gwt
+* __Apache Felix Declarative Services - org.apache.felix.scr (1.6.2)__
+	* org.osgi.service.component
+* __OPS4J Pax Logging - API - org.ops4j.pax.logging.pax-logging-api (1.7.0)__
 	* org.slf4j
-* __[liveSense :: Framework :: GWT framework - org.liveSense.framework.gwt (2-SNAPSHOT)](http://github.com/liveSense/org.liveSense.framework.gwt)__
-	* com.google.web.bindery.requestfactory.shared
-	* com.google.web.bindery.requestfactory.vm.impl
-* __[liveSense :: Extension :: javax.persistence - org.liveSense.misc.javax.persistence (2-SNAPSHOT)](http://github.com/liveSense/org.liveSense.misc.javax.persistence)__
-	* javax.persistence
-* __[liveSense :: Misc :: JSR 303 Bean Validation - org.liveSense.misc.jsr303 (2-SNAPSHOT)](http://github.com/liveSense/org.liveSense.misc.jsr303)__
+	* org.slf4j
+	* org.slf4j
+	* org.slf4j
+* __Apache ServiceMix :: Specs :: JSR-303 API 1.0.0 - org.apache.servicemix.specs.jsr303-api-1.0.0 (2.2.0)__
 	* javax.validation.constraints
+* __Apache ServiceMix :: Specs :: Java Persistence API 1.4 - org.apache.servicemix.specs.java-persistence-api-1.1.1 (2.2.0)__
+	* javax.persistence
 
 ## OSGi Embedded JARs
 

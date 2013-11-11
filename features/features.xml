@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><features name="liveSense-${liveSense.version}-sample-gwt-notesRequestFactory" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+	<feature name="liveSense-sample-gwt-notesRequestFactory" version="${liveSense.sample.gwt.notesRequestFactory.version}" description="liveSense sample gwt notesRequestFactory">
+        <feature>liveSense-core-base</feature>
+		<bundle>mvn:com.github.livesense/org.liveSense.sample.gwt.notesRequestFactory/${liveSense.sample.gwt.notesRequestFactory.version}</bundle>
+	</feature>
+</features>

@@ -5,7 +5,7 @@
 		<groupId>com.github.livesense</groupId>
 		<artifactId>org.liveSense.parent</artifactId>
 		<version>2-SNAPSHOT</version>
-		<relativePath>../org.liveSense.parent</relativePath>
+		<relativePath>..</relativePath>
 	</parent>
 
 	<!-- TODO -->
@@ -81,6 +81,7 @@
 			<!-- Cleaning -->
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
 				<configuration>
 					<filesets>
 						<fileset>
