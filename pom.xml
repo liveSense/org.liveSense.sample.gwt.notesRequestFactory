@@ -120,7 +120,7 @@
 							SLING-INF/sling-scripts=src/main/resources/sling-scripts,
 							SLING-INF/gwt-app=target/${project.artifactId}-${project.version},
 							META-INF=target/maven-shared-archive-resources/META-INF,
-							OSGI-INF=target/scr-plugin-generated/OSGI-INF,
+							OSGI-INF=target/classes/OSGI-INF,
 							org/liveSense/sample/gwt/notesRequestFactory/server=war/WEB-INF/classes/org/liveSense/sample/gwt/notesRequestFactory/server,
 							org/liveSense/sample/gwt/notesRequestFactory/shared=war/WEB-INF/classes/org/liveSense/sample/gwt/notesRequestFactory/shared
 						</Include-Resource>
