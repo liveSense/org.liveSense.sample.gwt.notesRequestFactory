@@ -232,6 +232,11 @@
 			<artifactId>org.liveSense.service.gwt</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.github.livesense</groupId>
+			<artifactId>org.liveSense.core</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- Sling dependencies -->
 		<dependency>
