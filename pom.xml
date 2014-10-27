@@ -16,7 +16,7 @@
   </scm>
 
 	<artifactId>org.liveSense.sample.gwt.notesRequestFactory</artifactId>
-	<name>liveSense :: Sample :: GWT RPC Notes Request Factory</name>
+	<name>liveSense :: Sample :: GWT Notes Request Factory</name>
 	<description>liveSense gwt sample using RequestFactory.</description>
 
 	<packaging>bundle</packaging>
@@ -113,6 +113,7 @@
                         </Export-Package>
 						<!-- Copy the files from filesystem to Bundle -->
 						<Include-Resource>
+							{maven-resources},
 							SLING-INF/jcr-contents=src/main/resources/jcr-contents,
 							SLING-INF/jcr-nodes=src/main/resources/jcr-nodes,
 							SLING-INF/jcr-nodetypes=src/main/resources/jcr-nodetypes,
@@ -235,6 +236,11 @@
 		<dependency>
 			<groupId>com.github.livesense</groupId>
 			<artifactId>org.liveSense.core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.livesense</groupId>
+			<artifactId>org.liveSense.misc.jcrWrapper</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
